@@ -12,7 +12,7 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 /**
  *
- * @author Monika
+ * @author Monika Hallo Monika
  */
 public class VeranstaltungSuchen extends javax.swing.JFrame {
     private VeranstaltungsSuchenCtrl ctrl;
