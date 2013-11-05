@@ -5,7 +5,7 @@
 package GUIController;
 
 import DTO.objecte.*;
-import controller.RMIControllerInterface;
+import client.Client;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
@@ -21,13 +21,13 @@ public class KartenInfoCtrl {
     private DTOKategorieInformation _kategorie;
     private DTOKategorieKarte _Kategoriekarten;
     private DTOKundenDaten _kunde;
-    private RMIControllerInterface _rmiCtrl; 
+    private Client _client;
 
-    public KartenInfoCtrl(DTOVeranstaltung veranstaltung, DTOKategorieInformation kategorie, RMIControllerInterface rmiCtrl) {
-        _rmiCtrl = rmiCtrl;
-        _veranstaltung = veranstaltung;
-        _kategorie = kategorie;
-        _Kategoriekarten = _rmiCtrl.getAlleFreieKartenNachKategorie(new DTOKategorienAuswaehlen(_kategorie.getId()));
+    public KartenInfoCtrl(int veranstaltungID, int kategorieID, Client client) {
+        _client = client;
+        _veranstaltung = client.getVeranstaltungByID(kategorieID);
+        _kategorie = client.getKategorieInfo(kategorieID);
+        _Kategoriekarten = _client.getAlleFreieKartenNachKategorie(new DTOKategorienAuswaehlen(_kategorie.getId()));
     }
 
     public TableModel getKartenInfo() {
@@ -56,7 +56,7 @@ public class KartenInfoCtrl {
             }
             if (isNumber) {
                 try {
-                    _kunde = _rmiCtrl.getKundendatenNachID(id);
+                    _kunde = _client.getKundendatenNachID(id);
                 } catch (Exception ex) {
                     _kunde = null;
                 }
@@ -117,11 +117,8 @@ public class KartenInfoCtrl {
 
             karten.add(new DTOKarteBestellen((int) o[1], kundenID, (boolean) o[4]));
         }
-        try {
-            _rmiCtrl.verkaufSpeichern(karten);
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
-        }
+        _client.verkaufSpeichern(karten);
+
         updateController();
     }
 
@@ -135,20 +132,22 @@ public class KartenInfoCtrl {
 
             karten.add(new DTOKarteReservieren((int) o[1], kundenID, (boolean) o[4]));
         }
-        try {
-            _rmiCtrl.reservierungSpeichern(karten);
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
-        }
+        _client.reservierungSpeichern(karten);
+
         updateController();
     }
 
-    public void deleteKundenInfo() {
+    private void deleteKundenInfo() {
         _kunde = null;
     }
 
     private void updateController() {
-        _kategorie = _rmiCtrl.getKategorieInfo(_kategorie.getId());
-        _Kategoriekarten = _rmiCtrl.getAlleFreieKartenNachKategorie(new DTOKategorienAuswaehlen(_kategorie.getId()));
+        _kategorie = _client.getKategorieInfo(_kategorie.getId());
+        _Kategoriekarten = _client.getAlleFreieKartenNachKategorie(new DTOKategorienAuswaehlen(_kategorie.getId()));
+    }
+
+    public void cancelClicked() {
+       deleteKundenInfo();
+       MainGuiCtrl.KarteCancel(_veranstaltung.getID());
     }
 }

@@ -741,8 +741,7 @@ public class KartenInfo extends javax.swing.JFrame {
     }
 
     private void btnCancelClicked() {
-       _ctrl.deleteKundenInfo();
-       //Weiterleitung auf 
+       _ctrl.cancelClicked();
     }
 
     private void btnKundePruefenClicked() {
@@ -756,5 +755,10 @@ public class KartenInfo extends javax.swing.JFrame {
                 _lblKundennummerInformation.setText("Kundennummer nicht im System vorhanden.");
             }
         }
+    }
+    
+    public void Quit()
+    {
+        this.dispose();
     }
 }

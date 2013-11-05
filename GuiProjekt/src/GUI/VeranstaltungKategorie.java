@@ -318,7 +318,7 @@ public class VeranstaltungKategorie extends javax.swing.JFrame {
     }
 
     private void btnCancelClicked() {
-        //TODO: Weiterleitung auf 1. GUI (Monika)
+        _ctrl.cancelButton();
     }
 
     private void btnKategorieWaehlenClicked() {
@@ -327,5 +327,9 @@ public class VeranstaltungKategorie extends javax.swing.JFrame {
             int id = (int) _tblKategorien.getValueAt(selectedRow[0], 1);
             _ctrl.selectKategorie(id);
         }
+    }
+
+    public void Quit() {
+        this.dispose();
     }
 }

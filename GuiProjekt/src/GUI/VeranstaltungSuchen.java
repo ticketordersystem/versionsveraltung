@@ -10,25 +10,27 @@ import java.util.LinkedList;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
+
 /**
  *
- * @author Monika Hallo Monika
+ * @author Monika
  */
 public class VeranstaltungSuchen extends javax.swing.JFrame {
+
     private VeranstaltungsSuchenCtrl ctrl;
-    //private List<Object[]> veranstInfoList = new LinkedList<>();
-    
-    
+    private int veranstId;
+    private List<Object[]> tempVeranstInfoList = new LinkedList<>();
+
     /**
      * Creates new form VeranstaltungSuchen
      */
-    public VeranstaltungSuchen(VeranstaltungsSuchenCtrl controller) {       
+    public VeranstaltungSuchen(VeranstaltungsSuchenCtrl controller) {
         initComponents();
         this.setVisible(true);
         ctrl = controller;
-        //loadComponents();
+        loadComponents();
     }
-   
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -58,10 +60,11 @@ public class VeranstaltungSuchen extends javax.swing.JFrame {
         jPanelEventTable = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableVeranstaltungen = new javax.swing.JTable();
-        jPanelInfoBack = new javax.swing.JPanel();
-        jPaneInfo = new javax.swing.JPanel();
+        jPanelSelectBack = new javax.swing.JPanel();
+        jPaneSelect = new javax.swing.JPanel();
         jPanelBackButton = new javax.swing.JPanel();
         jButtonBack = new javax.swing.JButton();
+        jButtonAnzeigen = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.GridLayout(1, 1));
@@ -158,7 +161,7 @@ public class VeranstaltungSuchen extends javax.swing.JFrame {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false, false
@@ -172,18 +175,28 @@ public class VeranstaltungSuchen extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jTableVeranstaltungen.setColumnSelectionAllowed(true);
+        jTableVeranstaltungen.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jTableVeranstaltungen.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(jTableVeranstaltungen);
-        jTableVeranstaltungen.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 
         jPanelEventTable.add(jScrollPane1);
 
         jPanelScreen.add(jPanelEventTable);
 
-        jPanelInfoBack.setLayout(new java.awt.GridLayout(1, 2));
+        jPanelSelectBack.setLayout(new java.awt.GridLayout(1, 2));
 
-        jPaneInfo.setLayout(new java.awt.GridLayout(1, 2));
-        jPanelInfoBack.add(jPaneInfo);
+        javax.swing.GroupLayout jPaneSelectLayout = new javax.swing.GroupLayout(jPaneSelect);
+        jPaneSelect.setLayout(jPaneSelectLayout);
+        jPaneSelectLayout.setHorizontalGroup(
+            jPaneSelectLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 460, Short.MAX_VALUE)
+        );
+        jPaneSelectLayout.setVerticalGroup(
+            jPaneSelectLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 136, Short.MAX_VALUE)
+        );
+
+        jPanelSelectBack.add(jPaneSelect);
 
         jButtonBack.setText("Cancel");
         jButtonBack.addActionListener(new java.awt.event.ActionListener() {
@@ -192,30 +205,37 @@ public class VeranstaltungSuchen extends javax.swing.JFrame {
             }
         });
 
+        jButtonAnzeigen.setText("Veranstaltung anzeigen");
+        jButtonAnzeigen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAnzeigenActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelBackButtonLayout = new javax.swing.GroupLayout(jPanelBackButton);
         jPanelBackButton.setLayout(jPanelBackButtonLayout);
         jPanelBackButtonLayout.setHorizontalGroup(
             jPanelBackButtonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 460, Short.MAX_VALUE)
-            .addGroup(jPanelBackButtonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanelBackButtonLayout.createSequentialGroup()
-                    .addGap(0, 77, Short.MAX_VALUE)
-                    .addComponent(jButtonBack, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 77, Short.MAX_VALUE)))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelBackButtonLayout.createSequentialGroup()
+                .addContainerGap(130, Short.MAX_VALUE)
+                .addComponent(jButtonAnzeigen)
+                .addGap(54, 54, 54)
+                .addComponent(jButtonBack, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         jPanelBackButtonLayout.setVerticalGroup(
             jPanelBackButtonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 136, Short.MAX_VALUE)
-            .addGroup(jPanelBackButtonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanelBackButtonLayout.createSequentialGroup()
-                    .addGap(0, 11, Short.MAX_VALUE)
-                    .addComponent(jButtonBack, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 11, Short.MAX_VALUE)))
+            .addGroup(jPanelBackButtonLayout.createSequentialGroup()
+                .addGap(43, 43, 43)
+                .addGroup(jPanelBackButtonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonBack, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonAnzeigen, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(54, Short.MAX_VALUE))
         );
 
-        jPanelInfoBack.add(jPanelBackButton);
+        jPanelSelectBack.add(jPanelBackButton);
 
-        jPanelScreen.add(jPanelInfoBack);
+        jPanelScreen.add(jPanelSelectBack);
 
         getContentPane().add(jPanelScreen);
 
@@ -246,7 +266,11 @@ public class VeranstaltungSuchen extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldArtistActionPerformed
 
+    private void jButtonAnzeigenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAnzeigenActionPerformed
+        veranstaltungAnzeigen();
+    }//GEN-LAST:event_jButtonAnzeigenActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonAnzeigen;
     private javax.swing.JButton jButtonBack;
     private javax.swing.JButton jButtonSearchDelete;
     private javax.swing.JButton jButtonSearchStart;
@@ -254,18 +278,18 @@ public class VeranstaltungSuchen extends javax.swing.JFrame {
     private javax.swing.JLabel jLabelArtist;
     private javax.swing.JLabel jLabelDate;
     private javax.swing.JLabel jLabelName;
-    private javax.swing.JPanel jPaneInfo;
+    private javax.swing.JPanel jPaneSelect;
     private javax.swing.JPanel jPanelBackButton;
     private javax.swing.JPanel jPanelDeleteSearchButton;
     private javax.swing.JPanel jPanelEventSearch;
     private javax.swing.JPanel jPanelEventTable;
-    private javax.swing.JPanel jPanelInfoBack;
     private javax.swing.JPanel jPanelScreen;
     private javax.swing.JPanel jPanelScreenTitle;
     private javax.swing.JPanel jPanelSearchButton;
     private javax.swing.JPanel jPanelSearchDelete;
     private javax.swing.JPanel jPanelSearchInput;
     private javax.swing.JPanel jPanelSearchLabels;
+    private javax.swing.JPanel jPanelSelectBack;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTableVeranstaltungen;
     private javax.swing.JTextField jTextFieldArtist;
@@ -273,38 +297,65 @@ public class VeranstaltungSuchen extends javax.swing.JFrame {
     private javax.swing.JTextField jTextFieldPlace;
     // End of variables declaration//GEN-END:variables
 
+    private void loadComponents() {
+        setTableModel();
+    }
+
     public void btnSearchStartClicked() {
         String date = jTextFieldDate.getText();
         String place = jTextFieldPlace.getText();
         String artist = jTextFieldArtist.getText();
         ctrl.searchingForEvents(date, place, artist);
+        setTableModel();
     }
-    
+
     private void btnSearchDeleteClicked() {
-        ctrl.deleteSearchInputs();
+        jTextFieldDate.setText("");
+        jTextFieldPlace.setText("");
+        jTextFieldArtist.setText("");
     }
+
     private void btnBackClicked() {
-        ctrl.deleteVeranstaltungInfo();
+        ctrl.CancelClicked();
     }
-    
+
     private void setTableModel() {
-       jTableVeranstaltungen.setModel(ctrl.getVeramstaltungInfoModel());
-       jTableVeranstaltungen.getModel().addTableModelListener(new TableModelListener() {
-           @Override
-           public void tableChanged(TableModelEvent e) {
-               int row = e.getFirstRow();
-               int column = e.getColumn();
-               TableModel model = (TableModel) e.getSource();
-               Object[] changedRow = new Object[model.getColumnCount()];
-               for (int i = 0; i < changedRow.length; i++) {
-                   changedRow[i] = model.getValueAt(row, i);
-               }               
-           }         
-       });
+        jTableVeranstaltungen.setModel(ctrl.getVeranstaltungInfoModel());
+        jTableVeranstaltungen.getModel().addTableModelListener(new TableModelListener() {
+            @Override
+            public void tableChanged(TableModelEvent e) {
+                int row = e.getFirstRow();
+                int column = e.getColumn();
+                TableModel model = (TableModel) e.getSource();
+                Object[] changedRow = new Object[model.getColumnCount()];
+                for (int i = 0; i < changedRow.length; i++) {
+                    changedRow[i] = model.getValueAt(row, i);
+                }
+            }
+        });
     }
-    
-    private void veranstaltungAuswaehlen() {
-        
+
+    /**
+     * private void setModelByPlace() {
+     * jTableVeranstaltungen.setModel(ctrl.getVeranstInfoModelByPlace(jTextFieldPlace.getText()));
+     * jTableVeranstaltungen.getModel().addTableModelListener(new
+     * TableModelListener() {
+     *
+     * @Override public void tableChanged(TableModelEvent e) { int row =
+     * e.getFirstRow(); int column = e.getColumn(); TableModel model =
+     * (TableModel) e.getSource(); Object[] changedRow = new
+     * Object[model.getColumnCount()]; for (int i = 0; i < changedRow.length;
+     * i++) { changedRow[i] = model.getValueAt(row, i); } } }); }
+     */
+    private void veranstaltungAnzeigen() {
+        int[] row = jTableVeranstaltungen.getSelectedRows();
+        if (row.length > 0) {
+            int vno = (int) jTableVeranstaltungen.getValueAt(row[0], 4);
+            ctrl.VeranstaltungAnzeigen(vno);
+        }
     }
-    
+
+    public void Quit() {
+        this.dispose();
+    }
 }
