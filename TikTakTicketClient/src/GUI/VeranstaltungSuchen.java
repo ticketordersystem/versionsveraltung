@@ -305,7 +305,17 @@ public class VeranstaltungSuchen extends javax.swing.JFrame {
         String date = jTextFieldDate.getText();
         String place = jTextFieldPlace.getText();
         String artist = jTextFieldArtist.getText();
+        if (date.isEmpty()) {
+            date = null;
+        }
+        if (place.isEmpty()) {
+            place = null;
+        }
+        if (artist.isEmpty()) {
+            artist = null;
+        }
         ctrl.searchingForEvents(date, place, artist);
+        System.out.println(date + "," + place + "," + artist);
         setTableModel();
     }
 
